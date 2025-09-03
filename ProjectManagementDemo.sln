@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.WPF", "ProjectManagement.WPF\ProjectManagement.WPF.csproj", "{DE2EF67F-7D63-C7FE-1FAF-7D390A9AF57F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManager.WPF", "ProjectManagement.WPF\ProjectManager.WPF.csproj", "{DE2EF67F-7D63-C7FE-1FAF-7D390A9AF57F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -11,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Lib", "..\AspClientSer
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{CF2B0D78-1740-421A-B4D5-C400D53710A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.DTO", "ProjectManagement.DTO\ProjectManagement.DTO.csproj", "{1C6E1724-E434-4DB4-8230-93B5D42D35AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManager.DTO", "ProjectManagement.DTO\ProjectManager.DTO.csproj", "{1C6E1724-E434-4DB4-8230-93B5D42D35AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagementModel", "ProjectManagementModel\ProjectManagementModel.csproj", "{0916395C-5030-42B4-90F3-8EFC7342ECAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagerModel", "ProjectManagementModel\ProjectManagerModel.csproj", "{0916395C-5030-42B4-90F3-8EFC7342ECAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core8", "..\AspClientServerPlatform.Mk1\Core\Core8\Core8.csproj", "{A62750A7-76D0-5F52-AB13-A01B5E34C054}"
 EndProject
