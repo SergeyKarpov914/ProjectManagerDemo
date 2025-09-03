@@ -3,10 +3,75 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Clio.ProjectManagerDemo.WPF"
-        mc:Ignorable="d"
+		xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:local="clr-namespace:Clio.ProjectManagerDemo.WPF" 
+		mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
-    </Grid>
+		<syncfusion:SfNavigationDrawer x:Name="navigationDrawer" DrawerWidth="300">
+			<syncfusion:SfNavigationDrawer.ContentView>
+				<Grid x:Name="mainContentView" 
+                  Background="White">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="auto"/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<StackPanel Background="#1aa1d6" 
+                            Orientation="Horizontal">
+						<Button x:Name="hamburgerButton" 
+                            BorderBrush="Transparent" 
+                            Height="50" Width="50" 
+                            Background="#1aa1d6" Foreground="White" 
+                            Click="HamburgerButton_Click">
+							<Image Source="image/hamburger_icon.png" 
+                               Height="20" 
+                               Width="20" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"/>
+						</Button>
+						<Label x:Name="headerLabel" 
+                           Height="50" 
+                           HorizontalContentAlignment="Center" 
+                           VerticalContentAlignment="Center" 
+                           Content="Home"    
+                           Foreground="White" 
+                           Background="#1aa1d6"/>
+					</StackPanel>
+					<Label Grid.Row="1" 
+                       x:Name="contentLabel" 
+                       VerticalContentAlignment="Center" 
+                       HorizontalContentAlignment="Center" 
+                       Content="Content View" 
+                       Foreground="Black"/>
+				</Grid>
+			</syncfusion:SfNavigationDrawer.ContentView>
+			<syncfusion:SfNavigationDrawer.DrawerHeaderView>
+				<Grid Background="#31ade9">
+					<Label Content="Header View" 
+                       HorizontalContentAlignment="Center" 
+                       VerticalContentAlignment="Center"/>
+				</Grid>
+			</syncfusion:SfNavigationDrawer.DrawerHeaderView>
+			<syncfusion:SfNavigationDrawer.DrawerContentView>
+				<Grid>
+					<ListBox x:Name="list" 
+                         ItemsSource="{Binding Contents}">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock  Text="{Binding Name}" 
+                                        Foreground="Black"/>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</Grid>
+			</syncfusion:SfNavigationDrawer.DrawerContentView>
+			<syncfusion:SfNavigationDrawer.DrawerFooterView>
+				<Grid Background="#31ade9">
+					<Label Content="Footer View" 
+                       HorizontalContentAlignment="Center" 
+                       VerticalContentAlignment="Center"/>
+				</Grid>
+			</syncfusion:SfNavigationDrawer.DrawerFooterView>
+		</syncfusion:SfNavigationDrawer>
+	</Grid>
 </Window>

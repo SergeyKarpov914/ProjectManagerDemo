@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\AspClientServerPlatform.Mk1\Core\Core.Lib\Core.Lib.csproj" />
     <ProjectReference Include="..\..\AspClientServerPlatform.Mk1\Core\Core8\Core8.csproj" />
-    <ProjectReference Include="..\ProjectManagement.DTO\ProjectManager.DTO.csproj" />
+    <ProjectReference Include="..\ProjectManager.DTO\ProjectManager.DTO.csproj" />
   </ItemGroup>
 
 </Project>
