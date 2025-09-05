@@ -1,11 +1,14 @@
 ﻿using Acsp.Core.Lib.Master;
+using Clio.ProjectManager.DTO;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace Clio.ProjectManagerModel.ViewModel
 {
     public interface IProjectManagerViewModel
     {
+        IEnumerable<Project> Projects { get; }
     }
     public interface IContentController
     {
@@ -18,25 +21,36 @@ namespace Clio.ProjectManagerModel.ViewModel
         
         public ProjectManagerViewModel Initialize(IContentController contentController)
         {
-            ContentSwitchCommand = MvvmMaster.CreateCommand<string>(SetContent);
+            ContentSwitchCommand = MvvmMaster.CreateCommand<string>(ResolveContent);
 
-
+            Projects = new List<Project>() { new Project() };
+            
+            
             _contentController = contentController;
             return this;
         }
 
-        public ICommand ContentSwitchCommand { get; private set; }
+        #region props 
 
-        public object   Content              
+        public object Content
         {
-            get         { return _content; }
-            private set { _content = value; this.OnPropertyChanged(nameof(Content)); } 
+            get { return _content; }
+            private set { _content = value; this.OnPropertyChanged(nameof(Content)); }
         }
         private object _content;
 
-        private void SetContent(string name)
+        #endregion props 
+
+        #region collections
+
+        public IEnumerable<Project> Projects { get; set; }
+
+        #endregion collections
+
+        public ICommand ContentSwitchCommand { get; private set; }
+
+        private void ResolveContent(string name)
         {
-            Content = null;
             Content = _contentController.SetContent(name, this);
         }
     }

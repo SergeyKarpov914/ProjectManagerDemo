@@ -1,6 +1,10 @@
 ﻿using Clio.ProjectManagerModel.ViewModel;
+using Syncfusion.Data;
+using Syncfusion.ProjIO;
 using Syncfusion.Windows.Controls.Gantt;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Resource = Syncfusion.Windows.Controls.Gantt.Resource;
 
 
 namespace Clio.ProjectManager.WPF.ViewModel
@@ -21,6 +25,9 @@ namespace Clio.ProjectManager.WPF.ViewModel
         #endregion
 
         #region Properties
+
+        public DateTime TimelineStart => TaskCollection.Min(t => t.StartDate).AddDays(-5);
+        public DateTime TimelineFinish => TaskCollection.Max(t => t.FinishDate);
 
         public ObservableCollection<TaskDetails> TaskCollection
         {
@@ -56,9 +63,11 @@ namespace Clio.ProjectManager.WPF.ViewModel
         public ObservableCollection<TaskDetails> GetTaskDetails()
         {
             ObservableCollection<TaskDetails> Activities = new ObservableCollection<TaskDetails>();
+
             Activities.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 2), FinishDate = new DateTime(2010, 6, 18), TaskName = "Analysing Market Scope of the Product", TaskId = 1 });
 
             ObservableCollection<IGanttTask> MarketAnalysis = new ObservableCollection<IGanttTask>();
+
             MarketAnalysis.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 2), FinishDate = new DateTime(2010, 6, 6), TaskName = "Current Market Review", TaskId = 2 });
             MarketAnalysis.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 6), FinishDate = new DateTime(2010, 6, 9), TaskName = "Establish milestone for future development", TaskId = 3 });
             MarketAnalysis.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 9), FinishDate = new DateTime(2010, 6, 10), TaskName = "Establish goals", TaskId = 4 });
@@ -82,9 +91,10 @@ namespace Clio.ProjectManager.WPF.ViewModel
             MarketAnalysis[3].Resources.Add(this.ResourceCollection[0]);
             MarketAnalysis[4].Resources.Add(this.ResourceCollection[0]);
             MarketAnalysis[5].Resources.Add(this.ResourceCollection[0]);
+
             Activities[0].Child = MarketAnalysis;
 
-
+/*
             Activities.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 18), FinishDate = new DateTime(2010, 7, 14), TaskName = "Infrastructure for Product Planning", TaskId = 9 });
             ObservableCollection<IGanttTask> InfrastructureReq = new ObservableCollection<IGanttTask>();
             InfrastructureReq.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 18), FinishDate = new DateTime(2010, 6, 24), TaskName = "Define procedure for qualifying ideas", TaskId = 10 });
@@ -277,10 +287,140 @@ namespace Clio.ProjectManager.WPF.ViewModel
 
             Activities[11].Child = PostReview;
             Activities.Add(new TaskDetails { StartDate = new DateTime(2010, 12, 10), FinishDate = new DateTime(2010, 12, 10), TaskName = "Product Released Successfully", TaskId = 70 });
-
+*/
             return Activities;
         }
 
         #endregion
+    }
+
+
+    public class TaskElement : INotifyPropertyChanged
+    {
+        private int _taskId;
+
+        private string _taskName;
+
+        private DateTime _startDate;
+
+        private DateTime _finishDate;
+
+        private ObservableCollection<IGanttTask> _child;
+
+        public ObservableCollection<IGanttTask> Child
+        {
+            get
+            {
+                return _child;
+            }
+            set
+            {
+                _child = value;
+                OnPropertyChanged("Child");
+            }
+        }
+
+        public int TaskId
+        {
+            get
+            {
+                return _taskId;
+            }
+            set
+            {
+                _taskId = value;
+                OnPropertyChanged("TaskId");
+            }
+        }
+
+        public string TaskName
+        {
+            get
+            {
+                return _taskName;
+            }
+            set
+            {
+                _taskName = value;
+                OnPropertyChanged("TaskName");
+            }
+        }
+
+        public DateTime StartDate
+        {
+            get
+            {
+                return _startDate;
+            }
+            set
+            {
+                if (_startDate != value)
+                {
+                    _startDate = value;
+                    OnPropertyChanged("StartDate");
+                }
+            }
+        }
+
+        public DateTime FinishDate
+        {
+            get
+            {
+                return _finishDate;
+            }
+            set
+            {
+                if (_finishDate != value)
+                {
+                    _finishDate = value;
+                    OnPropertyChanged("FinishDate");
+                }
+            }
+        }
+
+        private ObservableCollection<Predecessor> _predecessor;
+
+        private ObservableCollection<Resource> _resources;
+
+        public ObservableCollection<Predecessor> Predecessor
+        {
+            get
+            {
+                return _predecessor;
+            }
+            set
+            {
+                _predecessor = value;
+                OnPropertyChanged("Predecessor");
+            }
+        }
+
+        public ObservableCollection<Resource> Resources
+        {
+            get
+            {
+                return _resources;
+            }
+            set
+            {
+                _resources = value;
+                OnPropertyChanged("Resources");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (propertyName == null)
+            {
+                throw new ArgumentNullException(propertyName);
+            }
+
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }

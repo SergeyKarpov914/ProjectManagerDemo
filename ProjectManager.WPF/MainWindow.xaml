@@ -32,14 +32,24 @@
     </Style>-->
 
 		<DataTemplate DataType="{x:Type vm:Projects}">
-			<Grid   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gainsboro" >
+			<Grid   HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="Gainsboro" >
 				<Border Margin="20" Background="White" CornerRadius="1" Padding="10" >
 					<Border.Effect>
 						<DropShadowEffect Color="Black" BlurRadius="8" ShadowDepth="2" Opacity="0.4"/>
 					</Border.Effect>
+
+					<syncfusion:SfDataGrid x:Name="dataGrid"  
+										   AllowEditing="True"
+										   AddNewRowPosition="Top"
+										   ItemsSource="{Binding AllProjects}" 
+                                           AutoGenerateColumns="True"/>
+					
 				</Border>
 			</Grid>
 		</DataTemplate>
+
+		<!--StartTime="{Binding TimelineStart}"
+		    EndTime  ="{Binding TimelineFinish}"-->
 
 		<DataTemplate DataType="{x:Type vm:Tasks}">
 			<Grid   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gainsboro" >
@@ -50,8 +60,9 @@
 					<gantt:GanttControl x:Name="gantt" 
                                          HorizontalAlignment="Stretch"
                                          VerticalAlignment="Stretch"
+									     StartTime="{Binding TimelineStart}"
                                          Width="Auto"										
-                            ItemsSource="{Binding TaskCollection}">
+										ItemsSource="{Binding TaskCollection}">
 					</gantt:GanttControl>
 				</Border>
 			</Grid>
@@ -121,7 +132,7 @@
 			<ContentControl
                     x:Name="ActiveItem"
                     HorizontalAlignment="Center" 
-                    VerticalAlignment="Center"
+                    VerticalAlignment="Top"
                     Content="{Binding Content}"/>
 		</syncfusion:SfNavigationDrawer.ContentView>
 	</syncfusion:SfNavigationDrawer>
