@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using Clio.ProjectManagerModel.ViewModel;
 using Syncfusion.Windows.Controls.Gantt;
+using System.Collections.ObjectModel;
 
-namespace Header_and_Footer
+
+namespace Clio.ProjectManager.WPF.ViewModel
 {
-    public class GanttViewModel
+    public class Tasks
     {
         #region Constructor
 
         private ObservableCollection<Resource> _resourceCollection;
         private ObservableCollection<TaskDetails> _taskCollection;
 
-        public GanttViewModel()
+        public Tasks(IProjectManagerViewModel viewModel)
         {
             _resourceCollection = this.GetResources();
             _taskCollection = this.GetTaskDetails();
@@ -65,7 +66,7 @@ namespace Header_and_Footer
             MarketAnalysis.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 11), FinishDate = new DateTime(2010, 6, 14), TaskName = "Define product goals and milestones", TaskId = 6 });
             MarketAnalysis.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 12), FinishDate = new DateTime(2010, 6, 17), TaskName = "Organization status review", TaskId = 7 });
             MarketAnalysis.Add(new TaskDetails { StartDate = new DateTime(2010, 6, 18), FinishDate = new DateTime(2010, 6, 18), TaskName = "Market Scope of Product clarified", TaskId = 8 });
-            
+
             ObservableCollection<Predecessor> mrkPredecessor = new ObservableCollection<Predecessor>();
             mrkPredecessor.Add(new Predecessor { GanttTaskIndex = 2, GanttTaskRelationship = GanttTaskRelationship.FinishToStart });
             mrkPredecessor.Add(new Predecessor { GanttTaskIndex = 3, GanttTaskRelationship = GanttTaskRelationship.FinishToStart });

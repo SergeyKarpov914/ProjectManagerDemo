@@ -1,9 +1,11 @@
 ﻿using Acsp.Core.Lib.Data;
 using Acsp.Core.Lib.Extension;
+using Clio.ProjectManager.WPF.Content;
 using Clio.ProjectManagerModel.ViewModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Syncfusion.Licensing;
 using System;
 using System.Configuration;
 using System.IO;
@@ -18,6 +20,8 @@ namespace Clio.ProjectManagerDemo.WPF
 
         public App()
         {
+            SyncfusionLicenseProvider.RegisterLicense("NDAxNDcyMkAzMzMwMmUzMDJlMzAzYjMzMzAzYm1abVFRQmppM3NaQkNSNTBCbzB5NmxLL3FNT3dER3lQSVpRelVHbFRTVGc9;NDAxNDcyM0AzMzMwMmUzMDJlMzAzYjMzMzAzYk42Qk9HWXZ3UXRKS3VVeGpoU3k2VDVxb1hudFdsb2ZjM1V3a2tmR00rSEU9");
+
             _host = Host.CreateDefaultBuilder()
                         .ConfigureAppConfiguration((context, config) =>
                         {
@@ -36,10 +40,10 @@ namespace Clio.ProjectManagerDemo.WPF
         {
             await _host!.StartAsync();
 
-            ProjectManagerViewModel dataContext = _host.Services.GetRequiredService<ProjectManagerViewModel>();
+            ProjectManagerViewModel viewModel = _host.Services.GetRequiredService<ProjectManagerViewModel>();
             MainWindow mainWindow = _host.Services.GetRequiredService<MainWindow>();
 
-            mainWindow.DataContext = dataContext;
+            mainWindow.DataContext = viewModel.Initialize(new ContentController());
             mainWindow.Show();
 
             base.OnStartup(e);

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.ObjectModel" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\AspClientServerPlatform.Mk1\Core\Core.Lib\Core.Lib.csproj" />
     <ProjectReference Include="..\..\AspClientServerPlatform.Mk1\Core\Core8\Core8.csproj" />
     <ProjectReference Include="..\ProjectManager.DTO\ProjectManager.DTO.csproj" />
