@@ -1,5 +1,7 @@
 ﻿using Clio.ProjectManager.WPF.ViewModel;
 using Clio.ProjectManagerModel.ViewModel;
+using Syncfusion.Windows.Controls.Gantt;
+using System.Collections.ObjectModel;
 
 namespace Clio.ProjectManager.WPF.Content
 {
@@ -19,12 +21,14 @@ namespace Clio.ProjectManager.WPF.Content
             switch (name)
             {
                 case "Projects":
+                    if(_tasks is not null) _tasks.TaskCollection = new ObservableCollection<TaskDetails>();
                     content = _projects ??= new Projects(viewModel);
                     break;
                 case "Tasks":
                     content = _tasks ??= new Tasks(viewModel);
                     break;
                 case "Participants":
+                    if (_tasks is not null) _tasks.TaskCollection = null;
                     break;
             }
             return content;

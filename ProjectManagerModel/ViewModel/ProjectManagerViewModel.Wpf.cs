@@ -22,8 +22,10 @@ namespace Clio.ProjectManagerModel.ViewModel
         public ProjectManagerViewModel Initialize(IContentController contentController)
         {
             ContentSwitchCommand = MvvmMaster.CreateCommand<string>(ResolveContent);
+            OpenExcelFileCommand = MvvmMaster.CreateCommand<string>(OpenExcelFile);
+            OpenCsvFileCommand   = MvvmMaster.CreateCommand<string>(OpenCsvFile);
 
-            Projects = new List<Project>() { new Project() };
+            Projects = new List<Project>() { new Project() { Name = "First project" }, new Project() { Name = "Second project"} };
             
             
             _contentController = contentController;
@@ -52,6 +54,20 @@ namespace Clio.ProjectManagerModel.ViewModel
         private void ResolveContent(string name)
         {
             Content = _contentController.SetContent(name, this);
+        }
+
+        public ICommand OpenExcelFileCommand { get; private set; }
+
+        private async void OpenExcelFile(string name)
+        {
+            IEnumerable<Project> projects = await _excelMaster.ImportFromExcel<Project>(name);
+        }
+
+        public ICommand OpenCsvFileCommand { get; private set; }
+
+        private void OpenCsvFile(string name)
+        {
+            IEnumerable<Project> projects = _csvAdapter.Parse<Project>(name);
         }
     }
 }

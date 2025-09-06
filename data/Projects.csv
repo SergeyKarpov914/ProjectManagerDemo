@@ -1,0 +1,12 @@
+﻿Id,Code,Name,ClientID,ProjectTypeID,EmployeeCode,AccountingName
+,AZ01,Analysing Market Scope of the Product,,,,R & D
+,IP01,Infrastructure for Product Planning,,,,Analyzers
+,PD01,Product Definition Phase,,,,Product Definer
+,PD02,Analysing Customer Requirement,,,,Product Definer
+,PD03,Competitor Analysis,,,,Risk Management
+,PD04,Defining Sucess Measure,,,,Risk Management
+,PD05,Defining Team to Develop,,,,Testers
+,BD01,Budgeting in the Product,,,,Budgeting Team
+,DD01,Product Development,,,,Developers
+,PR01,Product Review,,,,Reviewer
+,PR02,Post Product Review,,,,Reviewer

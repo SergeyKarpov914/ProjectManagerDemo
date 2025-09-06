@@ -57,7 +57,7 @@
 					<Border.Effect>
 						<DropShadowEffect Color="Black" BlurRadius="8" ShadowDepth="2" Opacity="0.4"/>
 					</Border.Effect>
-					<gantt:GanttControl x:Name="gantt" 
+					<gantt:GanttControl x:Name="ganttTab" 
                                          HorizontalAlignment="Stretch"
                                          VerticalAlignment="Stretch"
 									     StartTime="{Binding TimelineStart}"
