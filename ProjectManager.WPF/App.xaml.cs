@@ -1,13 +1,11 @@
 ﻿using Acsp.Core.Lib.Data;
 using Acsp.Core.Lib.Extension;
-using Clio.ProjectManager.WPF.Content;
+using Clio.ProjectManager.WPF.WinUtil;
 using Clio.ProjectManagerModel.ViewModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Syncfusion.Licensing;
-using System;
-using System.Configuration;
 using System.IO;
 using System.Windows;
 
@@ -43,7 +41,7 @@ namespace Clio.ProjectManagerDemo.WPF
             ProjectManagerViewModel viewModel = _host.Services.GetRequiredService<ProjectManagerViewModel>();
             MainWindow mainWindow = _host.Services.GetRequiredService<MainWindow>();
 
-            mainWindow.DataContext = viewModel.Initialize(new ContentController());
+            mainWindow.DataContext = viewModel.Initialize(new WinAccess());
             mainWindow.Show();
 
             base.OnStartup(e);

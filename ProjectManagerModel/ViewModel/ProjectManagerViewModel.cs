@@ -15,7 +15,7 @@ namespace Clio.ProjectManagerModel.ViewModel
         }
     }
 
-    public sealed partial class ProjectManagerViewModel
+    public partial class ProjectManagerViewModel
     {
         public static DependencyMaster CascadeDependencies()
         {

@@ -8,15 +8,13 @@ namespace Clio.ProjectManager.DTO
     [Table("[dbo].[Project]")]
     public sealed class Project : IEntity
     {
-        [Column("Id")][PKey] public int Id { get; set; }
-        [Column("Name")] public string Name { get; set; }
-        [Column("Code")][Unique] public string Code { get; set; }
-
-        [Column("ClientID")][FKey] public int ClientId { get; set; }
-        [Column("ProjectTypeID")][FKey] public int ProjectTypeId { get; set; }
-        [Column("EmployeeCode")] public string EmployeeCode { get; set; }
-
-        [Column("AccountingName")] public string AccountingName { get; set; }
+        [Column("Id")][PKey]            public int    Id             { get; set; }
+        [Column("Name")]                public string Name           { get; set; }
+        [Column("Code")][Unique]        public string Code           { get; set; }
+        [Column("ClientID")][FKey]      public int    ClientId       { get; set; }
+        [Column("ProjectTypeID")][FKey] public int    ProjectTypeId  { get; set; }
+        [Column("EmployeeCode")]        public string EmployeeCode   { get; set; }
+        [Column("AccountingName")]      public string AccountingName { get; set; }
 
         public override string ToString() { return $"Project: {Name} (code: {Code})"; }
 

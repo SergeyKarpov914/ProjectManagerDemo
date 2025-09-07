@@ -16,7 +16,7 @@ namespace Clio.ProjectManager.WPF.ViewModel
 
         private ObservableCollection<Resource> _resources;
 
-        public Tasks(IProjectManagerViewModel viewModel)
+        public Tasks()
         {
             _resourceCollection = this.GetResources();
             _taskCollection = this.GetTaskDetails();

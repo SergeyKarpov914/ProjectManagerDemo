@@ -1,34 +1,70 @@
-﻿using Acsp.Core.Lib.Master;
+﻿using Acsp.Core.Lib.Abstraction;
+using Acsp.Core.Lib.Master;
 using Clio.ProjectManager.DTO;
+using Clio.ProjectManagerModel.ViewModel.Element;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Clio.ProjectManagerModel.ViewModel
 {
-    public interface IProjectManagerViewModel
+    public interface IPresentationContent
     {
-        IEnumerable<Project> Projects { get; }
-    }
-    public interface IContentController
-    {
-        object SetContent(string name, IProjectManagerViewModel viewModel);
+        ObservableCollection<ProjectElement> ProjectElements { get; }
+        ObservableCollection<TaskElement> TaskElements { get; }
+
+        ICommand OpenExcelFileCommand { get; }
+        ICommand OpenCsvFileCommand { get; }
+
     }
 
-    public partial class ProjectManagerViewModel : ObservableObject, IProjectManagerViewModel
+    #region content types
+
+    public sealed class ProjectContent
     {
-        private IContentController _contentController;
-        
-        public ProjectManagerViewModel Initialize(IContentController contentController)
+        private readonly IPresentationContent _viewModel;
+
+        public ProjectContent(IPresentationContent viewModel)
+        {
+            _viewModel = viewModel;
+        }
+
+        public ObservableCollection<ProjectElement> ProjectElements => _viewModel.ProjectElements;
+
+        public ICommand OpenExcelFileCommand => _viewModel.OpenExcelFileCommand;
+        public ICommand OpenCsvFileCommand => _viewModel.OpenCsvFileCommand;
+    }
+    public sealed class TaskContent
+    {
+        private readonly IPresentationContent _viewModel;
+
+        public TaskContent(IPresentationContent viewModel)
+        {
+            _viewModel = viewModel;
+        }
+
+        //ObservableCollection<ProjectElement> TaskElements => _viewModel.TaskElements;
+
+        public ICommand OpenExcelFileCommand => _viewModel.OpenExcelFileCommand;
+        public ICommand OpenCsvFileCommand => _viewModel.OpenCsvFileCommand;
+    }
+
+    #endregion content types
+
+    public partial class ProjectManagerViewModel : ObservableObject, IPresentationContent
+    {
+        public ProjectManagerViewModel Initialize(IWinAccess winAccess)
         {
             ContentSwitchCommand = MvvmMaster.CreateCommand<string>(ResolveContent);
             OpenExcelFileCommand = MvvmMaster.CreateCommand<string>(OpenExcelFile);
-            OpenCsvFileCommand   = MvvmMaster.CreateCommand<string>(OpenCsvFile);
+            OpenCsvFileCommand = MvvmMaster.CreateCommand<string>(OpenCsvFile);
 
-            Projects = new List<Project>() { new Project() { Name = "First project" }, new Project() { Name = "Second project"} };
-            
-            
-            _contentController = contentController;
+            _projectContent = new ProjectContent(this);
+            _taskContent = new TaskContent(this);
+
+            _winAccess = winAccess;
+
             return this;
         }
 
@@ -45,29 +81,73 @@ namespace Clio.ProjectManagerModel.ViewModel
 
         #region collections
 
-        public IEnumerable<Project> Projects { get; set; }
+        public ObservableCollection<ProjectElement> ProjectElements { get; private set; } = new ObservableCollection<ProjectElement>();
+        public ObservableCollection<TaskElement> TaskElements { get; private set; } = new ObservableCollection<TaskElement>();
+
+        private async void RefreshProjects(IEnumerable<Project> projects)
+        {
+            if (projects is not null)
+            {
+                ProjectElements.Clear();
+
+                foreach (Project project in projects)
+                {
+                    ProjectElements.Add(ProjectElement.Create(project));
+                }
+            }
+        }
 
         #endregion collections
+
+        #region commands
 
         public ICommand ContentSwitchCommand { get; private set; }
 
         private void ResolveContent(string name)
         {
-            Content = _contentController.SetContent(name, this);
+            switch (name)
+            {
+                case "Projects":
+                    Content = _projectContent;
+                    break;
+                case "Tasks":
+                    Content = _taskContent;
+                    break;
+                case "Participants":
+                    break;
+            }
         }
 
         public ICommand OpenExcelFileCommand { get; private set; }
 
         private async void OpenExcelFile(string name)
         {
-            IEnumerable<Project> projects = await _excelMaster.ImportFromExcel<Project>(name);
+            if (null != (name = _winAccess.SelectFile()))
+            {
+                IEnumerable<Project> projects = await _excelMaster.ImportFromExcel<Project>(name);
+                RefreshProjects(projects);
+            }
         }
 
         public ICommand OpenCsvFileCommand { get; private set; }
 
         private void OpenCsvFile(string name)
         {
-            IEnumerable<Project> projects = _csvAdapter.Parse<Project>(name);
+            if (null != (name = _winAccess.SelectFile()))
+            {
+                IEnumerable<Project> projects = _csvAdapter.Parse<Project>(name);
+            }
         }
+
+        #endregion commands
+
+        #region fields
+
+        private ProjectContent _projectContent = null;
+        private TaskContent _taskContent = null;
+
+        private IWinAccess _winAccess = null;
+
+        #endregion fields
     }
 }

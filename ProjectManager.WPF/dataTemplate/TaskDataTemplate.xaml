@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+					xmlns:gantt="clr-namespace:Syncfusion.Windows.Controls.Gantt;assembly=Syncfusion.Gantt.Wpf"
+					xmlns:local="clr-namespace:Clio.ProjectManagerDemo.WPF" 
+					xmlns:vm="clr-namespace:Clio.ProjectManager.WPF.ViewModel" 
+					>
+	<DataTemplate DataType="{x:Type vm:Tasks}">
+		<Grid   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gainsboro" >
+			<Border Margin="20" Background="White" CornerRadius="1" Padding="10" >
+				<Border.Effect>
+					<DropShadowEffect Color="Black" BlurRadius="8" ShadowDepth="2" Opacity="0.4"/>
+				</Border.Effect>
+				<gantt:GanttControl x:Name="ganttTab" 
+                                         HorizontalAlignment="Stretch"
+                                         VerticalAlignment="Stretch"
+									     StartTime="{Binding TimelineStart}"
+                                         Width="Auto"										
+										ItemsSource="{Binding TaskCollection}">
+				</gantt:GanttControl>
+			</Border>
+		</Grid>
+	</DataTemplate>
+</ResourceDictionary>

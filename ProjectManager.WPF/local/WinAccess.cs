@@ -1,15 +1,17 @@
-﻿namespace Clio.ProjectManager.WPF.WinUtil
+﻿using Acsp.Core.Lib.Abstraction;
+
+namespace Clio.ProjectManager.WPF.WinUtil
 {
-    public class FileUtil
+    public class WinAccess : IWinAccess
     {
-        public static string SelectFile(string mask = "*.*", string title = "Select a file")
+        public string SelectFile(string mask = "*.*")
         {
             string filePath = null;
 
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog
             {
                 Filter = $"Files ({mask})|{mask}",
-                Title = title
+                Title = "Select a file"
             };
             if (dialog.ShowDialog() == true)
             {

@@ -1,0 +1,53 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:sync="http://schemas.syncfusion.com/wpf"
+					xmlns:gantt="clr-namespace:Syncfusion.Windows.Controls.Gantt;assembly=Syncfusion.Gantt.Wpf"
+					xmlns:local="clr-namespace:Clio.ProjectManagerDemo.WPF" 
+					xmlns:vm="clr-namespace:Clio.ProjectManagerModel.ViewModel;assembly=ProjectManagerModel" 
+					>
+	<DataTemplate DataType="{x:Type vm:ProjectContent}">
+		<Grid   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gainsboro" >
+			<Border Margin="20" Background="White" CornerRadius="1" Padding="10" >
+				<Border.Effect>
+					<DropShadowEffect Color="Black" BlurRadius="8" ShadowDepth="2" Opacity="0.4"/>
+				</Border.Effect>
+
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="100"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+
+					<sync:ButtonAdv Grid.Row="0" Grid.Column="0" Margin="0,5" Padding="20,5" Command="{Binding OpenExcelFileCommand}" Label="Import Projects from Excel"/>
+					<sync:ButtonAdv Grid.Row="0" Grid.Column="1" Margin="20,5" Padding="20,5" Command="{Binding OpenCsvFileCommand}" Label="Import Projects from CSV"/>
+
+					<sync:SfDataGrid  x:Name="dataGrid"
+										   Grid.Row="1" Grid.ColumnSpan="3" Margin="0,20"
+										   Height="400"
+										   AllowEditing="True"
+										   VerticalAlignment="Top"
+										   AddNewRowPosition="Top"
+										   ItemsSource="{Binding ProjectElements}" 
+                                           AutoGenerateColumns="False">
+						<sync:SfDataGrid.Columns>
+							<sync:GridTextColumn HeaderText="Code"         MappingName="Code" />
+							<sync:GridTextColumn HeaderText="Name"         MappingName="Name"  Width="300"/>
+							<sync:GridTextColumn HeaderText="Client"       MappingName="Client" />
+							<sync:GridTextColumn HeaderText="Employee"     MappingName="Employee" />
+							<sync:GridTextColumn HeaderText="Account"      MappingName="AccountingName" />
+							<sync:GridTextColumn HeaderText="Project Type" MappingName="ProjectType" />
+						</sync:SfDataGrid.Columns>
+					</sync:SfDataGrid>
+
+				</Grid>
+			</Border>
+		</Grid>
+	</DataTemplate>
+</ResourceDictionary>
+	
