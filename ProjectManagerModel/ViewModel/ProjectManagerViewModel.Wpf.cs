@@ -1,10 +1,13 @@
 ﻿using Acsp.Core.Lib.Abstraction;
+using Acsp.Core.Lib.Extension;
 using Acsp.Core.Lib.Master;
 using Clio.ProjectManager.DTO;
+using Clio.ProjectManagerModel.ViewModel.Content;
 using Clio.ProjectManagerModel.ViewModel.Element;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Clio.ProjectManagerModel.ViewModel
@@ -14,6 +17,9 @@ namespace Clio.ProjectManagerModel.ViewModel
         ObservableCollection<ProjectElement> ProjectElements { get; }
         ObservableCollection<TaskElement> TaskElements { get; }
 
+        public IEnumerable<Client>   Clients { get; }
+        public IEnumerable<Employee> Employees { get; }
+
         ICommand OpenExcelFileCommand { get; }
         ICommand OpenCsvFileCommand { get; }
 
@@ -21,47 +27,33 @@ namespace Clio.ProjectManagerModel.ViewModel
 
     #region content types
 
-    public sealed class ProjectContent
-    {
-        private readonly IPresentationContent _viewModel;
+    public enum ContentType { Project, Task, Static, None }
 
-        public ProjectContent(IPresentationContent viewModel)
+    public class PresentationContent
+    {
+        protected readonly IPresentationContent _viewModel;
+
+        public PresentationContent(IPresentationContent viewModel)
         {
             _viewModel = viewModel;
         }
-
-        public ObservableCollection<ProjectElement> ProjectElements => _viewModel.ProjectElements;
-
-        public ICommand OpenExcelFileCommand => _viewModel.OpenExcelFileCommand;
-        public ICommand OpenCsvFileCommand => _viewModel.OpenCsvFileCommand;
-    }
-    public sealed class TaskContent
-    {
-        private readonly IPresentationContent _viewModel;
-
-        public TaskContent(IPresentationContent viewModel)
-        {
-            _viewModel = viewModel;
-        }
-
-        //ObservableCollection<ProjectElement> TaskElements => _viewModel.TaskElements;
-
-        public ICommand OpenExcelFileCommand => _viewModel.OpenExcelFileCommand;
-        public ICommand OpenCsvFileCommand => _viewModel.OpenCsvFileCommand;
+        protected ContentType ContentType { get; set; } = ContentType.None;
     }
 
     #endregion content types
 
     public partial class ProjectManagerViewModel : ObservableObject, IPresentationContent
     {
-        public ProjectManagerViewModel Initialize(IWinAccess winAccess)
+        public ProjectManagerViewModel Initialize(IWinAccess winAccess, /*TEMP*/ object taskContent)
         {
-            ContentSwitchCommand = MvvmMaster.CreateCommand<string>(ResolveContent);
+            ContentSwitchCommand = MvvmMaster.CreateAsyncCommand<string>(ResolveContent);
+
             OpenExcelFileCommand = MvvmMaster.CreateCommand<string>(OpenExcelFile);
             OpenCsvFileCommand = MvvmMaster.CreateCommand<string>(OpenCsvFile);
 
             _projectContent = new ProjectContent(this);
-            _taskContent = new TaskContent(this);
+            _staticContent = new StaticContent(this);
+            _taskContent = taskContent; // TEMP new TaskContent(this);
 
             _winAccess = winAccess;
 
@@ -84,17 +76,37 @@ namespace Clio.ProjectManagerModel.ViewModel
         public ObservableCollection<ProjectElement> ProjectElements { get; private set; } = new ObservableCollection<ProjectElement>();
         public ObservableCollection<TaskElement> TaskElements { get; private set; } = new ObservableCollection<TaskElement>();
 
-        private async void RefreshProjects(IEnumerable<Project> projects)
+        public IEnumerable<Client> Clients { get; private set; }
+        public IEnumerable<Employee> Employees { get; private set; }
+        public IEnumerable<ProjectType> ProjectTypes { get; private set; }
+
+
+        private async Task RefreshProjectCollection(IEnumerable<Project> projects, bool doClear = false)
         {
             if (projects is not null)
             {
-                ProjectElements.Clear();
-
+                if (doClear)
+                {
+                    ProjectElements.Clear();
+                }
                 foreach (Project project in projects)
                 {
                     ProjectElements.Add(ProjectElement.Create(project));
                 }
             }
+            await Task.Delay(0);
+        }
+
+        private async Task GetProjects()
+        {
+            await RefreshProjectCollection(await _processor.GetProjects());
+        }
+
+        private async Task GetStaticEntities()
+        {
+            Clients      = await _processor.GetClients();
+            Employees    = await _processor.GetEmployees();
+            ProjectTypes = await _processor.GetProjectTypes();
         }
 
         #endregion collections
@@ -103,18 +115,25 @@ namespace Clio.ProjectManagerModel.ViewModel
 
         public ICommand ContentSwitchCommand { get; private set; }
 
-        private void ResolveContent(string name)
+        private async Task ResolveContent(string name)
         {
-            switch (name)
+            ContentType content = name.ToEnum<ContentType>(ContentType.None);
+            
+            switch (content)
             {
-                case "Projects":
+                case ContentType.Project:
+                    await GetProjects();
                     Content = _projectContent;
                     break;
-                case "Tasks":
+                case ContentType.Task:
                     Content = _taskContent;
                     break;
-                case "Participants":
+                case ContentType.Static:
+                    await GetStaticEntities();
+                    Content = _staticContent;
                     break;
+                default:
+                    throw new System.Exception($"Cannot resolve content '{name}'");
             }
         }
 
@@ -124,8 +143,7 @@ namespace Clio.ProjectManagerModel.ViewModel
         {
             if (null != (name = _winAccess.SelectFile()))
             {
-                IEnumerable<Project> projects = await _excelMaster.ImportFromExcel<Project>(name);
-                RefreshProjects(projects);
+                await RefreshProjectCollection(await _excelMaster.ImportFromExcel<Project>(name));
             }
         }
 
@@ -144,7 +162,10 @@ namespace Clio.ProjectManagerModel.ViewModel
         #region fields
 
         private ProjectContent _projectContent = null;
-        private TaskContent _taskContent = null;
+        private StaticContent  _staticContent = null;
+       
+        //      private TaskContent _taskContent = null;          // TEMP
+        private object _taskContent = null;
 
         private IWinAccess _winAccess = null;
 

@@ -5,29 +5,29 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Clio.ProjectManager.DTO
 {
-    [Table("[dbo].[ProjectRateSchedule]")]
-    public sealed class ProjectRateType : IEntity
+    [Table("[dbo].[ProjectType]")]
+    public sealed class ProjectType : IEntity
     {
-        [Column("ID")][PKey] public int Id { get; set; }
+        [Column("Id")][PKey] public int Id { get; set; }
         [Column("Code")] public string Code { get; set; }
         [Column("Name")] public string Name { get; set; }
 
         #region dataaccess
 
-        public static IDataAccess<ProjectRateType> DataAccess(IDataGateway gateway, IDataAccessCache cache)
+        public static IDataAccess<ProjectType> DataAccess(IDataGateway gateway, IDataAccessCache cache)
         {
-            return _dataAccess ??= new RateScheduleTypeDataAccess(gateway, cache);
+            return _dataAccess ??= new ProjectTypeDataAccess(gateway, cache);
         }
-        private static IDataAccess<ProjectRateType> _dataAccess = null;
+        private static IDataAccess<ProjectType> _dataAccess = null;
 
         #endregion dataaccess
     }
 
-    public interface IRateScheduleTypeDataAccess : IDataAccess<ProjectRateType> { }
+    public interface IProjectTypeDataAccess : IDataAccess<ProjectType> { }
 
-    public sealed class RateScheduleTypeDataAccess : DataAccessMaster<ProjectRateType>, IRateScheduleTypeDataAccess
+    public sealed class ProjectTypeDataAccess : DataAccessMaster<ProjectType>, IProjectTypeDataAccess
     {
-        public RateScheduleTypeDataAccess(IDataGateway gateway, IDataAccessCache cache) : base(gateway, cache)
+        public ProjectTypeDataAccess(IDataGateway gateway, IDataAccessCache cache) : base(gateway, cache)
         {
         }
     }

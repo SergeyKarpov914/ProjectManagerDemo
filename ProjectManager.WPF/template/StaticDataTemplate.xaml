@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:sync="http://schemas.syncfusion.com/wpf"
+					xmlns:local="clr-namespace:Clio.ProjectManagerDemo.WPF" 
+					xmlns:vm="clr-namespace:Clio.ProjectManagerModel.ViewModel.Content;assembly=ProjectManagerModel">
+
+	<DataTemplate DataType="{x:Type vm:StaticContent}">
+		<Grid   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gainsboro" >
+			<Border Margin="20" Background="White" CornerRadius="1" Padding="10" >
+				<Border.Effect>
+					<DropShadowEffect Color="Black" BlurRadius="8" ShadowDepth="2" Opacity="0.4"/>
+				</Border.Effect>
+
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					<sync:SfDataGrid	   Grid.Row="1" 
+										   Height="300" VerticalAlignment="Top" AddNewRowPosition="Top"
+										   AllowEditing="False"
+										   ItemsSource="{Binding Clients}" 
+                                           AutoGenerateColumns="False">
+						<sync:SfDataGrid.Columns>
+							<sync:GridTextColumn HeaderText="Code"           MappingName="Code"          Width="80" />
+							<sync:GridTextColumn HeaderText="Name"           MappingName="Name"           />
+							<sync:GridTextColumn HeaderText="Company"        MappingName="Company"        />
+							<sync:GridTextColumn HeaderText="Address"        MappingName="Address"        />
+							<sync:GridTextColumn HeaderText="City"           MappingName="City"           />
+							<sync:GridTextColumn HeaderText="State"          MappingName="State"         Width="80" />
+							<sync:GridTextColumn HeaderText="Country"        MappingName="Country"       Width="80" />
+							<sync:GridTextColumn HeaderText="Classification" MappingName="Classification" />
+						</sync:SfDataGrid.Columns>
+					</sync:SfDataGrid>
+
+					<sync:SfDataGrid	   Grid.Row="2" Margin="0,10,0,0"
+										   VerticalAlignment="Top" AddNewRowPosition="Top"
+										   AllowEditing="False"
+										   ItemsSource="{Binding Employees}" 
+                                           AutoGenerateColumns="False">
+						<sync:SfDataGrid.Columns>
+							<sync:GridTextColumn HeaderText="Code"            MappingName="Code"           Width="80"/>
+							<sync:GridTextColumn HeaderText="Name"            MappingName="Name"           />
+							<sync:GridTextColumn HeaderText="First Name"      MappingName="FirstName"         />
+							<sync:GridTextColumn HeaderText="Last Name"       MappingName="LastName"          />
+					        <sync:GridTextColumn HeaderText="Corporate Title" MappingName="CorporateTitle"    />
+							<sync:GridTextColumn HeaderText="Location"        MappingName="LocationCode"   Width="80"   />
+							<sync:GridTextColumn HeaderText="Discipline"      MappingName="Discipline"     Width="180"   />
+							<sync:GridTextColumn HeaderText="Job Description" MappingName="JobGroupDescription" Width="180"/>
+						</sync:SfDataGrid.Columns>
+					</sync:SfDataGrid>
+
+				</Grid>
+			</Border>
+		</Grid>
+	</DataTemplate>
+
+</ResourceDictionary>

@@ -141,6 +141,21 @@ namespace Clio.ProjectManagerModel
             return items;
         }
 
+        public async Task<IEnumerable<ProjectType>> GetProjectTypes()
+        {
+            IEnumerable<ProjectType> items = Enumerable.Empty<ProjectType>();
+            try
+            {
+                items = await ProjectType.DataAccess(_sqlGateway, _cache).Read();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, ex);
+                throw;
+            }
+            return items;
+        }
+
         #endregion get entity collections
 
         #region entity crud

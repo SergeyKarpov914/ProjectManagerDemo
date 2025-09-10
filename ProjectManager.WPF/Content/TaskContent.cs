@@ -1,5 +1,4 @@
-﻿using Clio.ProjectManagerModel.ViewModel;
-using Syncfusion.Windows.Controls.Gantt;
+﻿using Syncfusion.Windows.Controls.Gantt;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Resource = Syncfusion.Windows.Controls.Gantt.Resource;
@@ -7,7 +6,7 @@ using Resource = Syncfusion.Windows.Controls.Gantt.Resource;
 
 namespace Clio.ProjectManager.WPF.ViewModel
 {
-    public class Tasks
+    public class TaskContent
     {
         #region Constructor
 
@@ -16,7 +15,7 @@ namespace Clio.ProjectManager.WPF.ViewModel
 
         private ObservableCollection<Resource> _resources;
 
-        public Tasks()
+        public TaskContent()
         {
             _resourceCollection = this.GetResources();
             _taskCollection = this.GetTaskDetails();

@@ -26,8 +26,9 @@
 			</Style>
 
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="dataTemplate/ProjectDataTemplate.xaml"/>
-				<ResourceDictionary Source="dataTemplate/TaskDataTemplate.xaml"/>
+				<ResourceDictionary Source="template/ProjectDataTemplate.xaml"/>
+				<ResourceDictionary Source="template/TaskDataTemplate.xaml"/>
+				<ResourceDictionary Source="template/StaticDataTemplate.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Window.Resources>
@@ -43,7 +44,7 @@
                 IsExpanded="True"
                 IsSelected="True"
 			    Command="{Binding ContentSwitchCommand}"
-                CommandParameter="Projects">
+                CommandParameter="Project">
 			<syncfusion:NavigationItem.Icon>
 				<Path
                     Width="16"
@@ -60,7 +61,7 @@
                 IsExpanded="True"
                 IsSelected="True"
 			    Command="{Binding ContentSwitchCommand}"
-                CommandParameter="Tasks">
+                CommandParameter="Task">
 			<syncfusion:NavigationItem.Icon>
 				<Path
                 Width="16"
@@ -77,7 +78,7 @@
 				IsExpanded="True"
 				IsSelected="True"
 				Command="{Binding ContentSwitchCommand}"
-				CommandParameter="Participants">
+				CommandParameter="Static">
 		<syncfusion:NavigationItem.Icon>
 				<Path
                 Width="16"
