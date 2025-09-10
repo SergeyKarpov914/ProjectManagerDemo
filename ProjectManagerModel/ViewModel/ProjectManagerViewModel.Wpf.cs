@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace Clio.ProjectManagerModel.ViewModel
 {
-    public interface IPresentationContent
+    public interface IPMViewModel
     {
         ObservableCollection<ProjectElement> ProjectElements { get; }
         ObservableCollection<TaskElement> TaskElements { get; }
@@ -21,7 +21,10 @@ namespace Clio.ProjectManagerModel.ViewModel
         public IEnumerable<Employee> Employees { get; }
 
         ICommand OpenExcelFileCommand { get; }
-        ICommand OpenCsvFileCommand { get; }
+        ICommand OpenCsvFileCommand   { get; }
+        ICommand AddProjectCommand    { get; }
+        ICommand RowValidatingCommand { get; }
+        ICommand DeleteProjectCommand { get; }
 
     }
 
@@ -31,9 +34,9 @@ namespace Clio.ProjectManagerModel.ViewModel
 
     public class PresentationContent
     {
-        protected readonly IPresentationContent _viewModel;
+        protected readonly IPMViewModel _viewModel;
 
-        public PresentationContent(IPresentationContent viewModel)
+        public PresentationContent(IPMViewModel viewModel)
         {
             _viewModel = viewModel;
         }
@@ -42,14 +45,17 @@ namespace Clio.ProjectManagerModel.ViewModel
 
     #endregion content types
 
-    public partial class ProjectManagerViewModel : ObservableObject, IPresentationContent
+    public partial class ProjectManagerViewModel : ObservableObject, IPMViewModel
     {
         public ProjectManagerViewModel Initialize(IWinAccess winAccess, /*TEMP*/ object taskContent)
         {
             ContentSwitchCommand = MvvmMaster.CreateAsyncCommand<string>(ResolveContent);
 
             OpenExcelFileCommand = MvvmMaster.CreateCommand<string>(OpenExcelFile);
-            OpenCsvFileCommand = MvvmMaster.CreateCommand<string>(OpenCsvFile);
+            OpenCsvFileCommand   = MvvmMaster.CreateCommand<string>(OpenCsvFile);
+            AddProjectCommand    = MvvmMaster.CreateCommand<string>(OnProjectAdd);
+            RowValidatingCommand = MvvmMaster.CreateCommand<string>(OnProjectValidating);
+            DeleteProjectCommand = MvvmMaster.CreateCommand<string>(OnProjectDelete);
 
             _projectContent = new ProjectContent(this);
             _staticContent = new StaticContent(this);
@@ -155,6 +161,27 @@ namespace Clio.ProjectManagerModel.ViewModel
             {
                 IEnumerable<Project> projects = _csvAdapter.Parse<Project>(name);
             }
+        }
+
+        public ICommand AddProjectCommand { get; private set; }
+
+        private void OnProjectAdd(string name)
+        {
+            _winAccess.ShowNotification("Start adding new project");
+        }
+
+        public ICommand RowValidatingCommand { get; private set; }
+
+        private void OnProjectValidating(string name)
+        {
+            _winAccess.ShowNotification("New project is on it's way");
+        }
+
+        public ICommand DeleteProjectCommand { get; private set; }
+
+        private void OnProjectDelete(string name)
+        {
+            _winAccess.ShowNotification("Delete order. Who do you think you are? Nigel Mansell?", Notification.Error, 5000);
         }
 
         #endregion commands

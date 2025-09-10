@@ -4,6 +4,7 @@
 					xmlns:gantt="clr-namespace:Syncfusion.Windows.Controls.Gantt;assembly=Syncfusion.Gantt.Wpf"
 					xmlns:local="clr-namespace:Clio.ProjectManagerDemo.WPF" 
 					xmlns:vm="clr-namespace:Clio.ProjectManagerModel.ViewModel.Content;assembly=ProjectManagerModel" 
+					xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 					>
 	<DataTemplate DataType="{x:Type vm:ProjectContent}">
 		<Grid   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gainsboro" >
@@ -21,19 +22,43 @@
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="*"/>
 					</Grid.ColumnDefinitions>
 
 					<sync:ButtonAdv Grid.Row="0" Grid.Column="0" Margin="0,5" Padding="20,5" Command="{Binding OpenExcelFileCommand}" Label="Import Projects from Excel"/>
 					<sync:ButtonAdv Grid.Row="0" Grid.Column="1" Margin="20,5" Padding="20,5" Command="{Binding OpenCsvFileCommand}" Label="Import Projects from CSV"/>
 
-					<sync:SfDataGrid 	   Grid.Row="1" Grid.ColumnSpan="3" Margin="0,20"
+					<sync:ButtonAdv Grid.Row="0" Grid.Column="2" Margin="20,5" Padding="20,5" Label="Event test">
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="OnClick">
+								<i:InvokeCommandAction Command="{Binding RecordDeletedCommand}" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+					</sync:ButtonAdv>
+					
+					 <sync:SfDataGrid 	   Grid.Row="1" Grid.ColumnSpan="4" Margin="0,20"
 										   Height="400" VerticalAlignment="Top" AddNewRowPosition="Top"
 										   AllowEditing="True"
+										   AllowDeleting="True"
+										   SelectionUnit="Row"
+										   NewItemPlaceholderPosition="AtEnd"
 										   ItemsSource="{Binding ProjectElements}" 
-                                           AutoGenerateColumns="False">
+                                           AutoGenerateColumns="False"	>
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="AddNewRowInitiating">
+									<i:InvokeCommandAction Command="{Binding AddProjectCommand}" />
+								</i:EventTrigger>
+								<i:EventTrigger EventName="RowValidating">
+									<i:InvokeCommandAction Command="{Binding RowValidatingCommand}" />
+								</i:EventTrigger>
+								<i:EventTrigger EventName="RecordDeleting">
+									<i:InvokeCommandAction Command="{Binding DeleteProjectCommand}" />
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+
 						<sync:SfDataGrid.Columns>
-							<sync:GridTextColumn HeaderText="Code"         MappingName="Code" />
+							<sync:GridTextColumn HeaderText="Code"         MappingName="Code" Width="80"/>
 							<sync:GridTextColumn HeaderText="Name"         MappingName="Name"  Width="300"/>
 							<sync:GridTextColumn HeaderText="Client"       MappingName="Client" />
 							<sync:GridTextColumn HeaderText="Employee"     MappingName="Employee" />

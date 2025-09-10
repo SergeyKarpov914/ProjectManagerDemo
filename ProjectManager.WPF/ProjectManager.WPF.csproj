@@ -29,6 +29,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="Syncfusion.Gantt.WPF" Version="30.2.7" />
     <PackageReference Include="Syncfusion.Licensing" Version="30.2.7" />
     <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="30.2.7" />

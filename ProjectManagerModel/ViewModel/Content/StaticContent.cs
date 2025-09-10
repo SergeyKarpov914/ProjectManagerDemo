@@ -5,7 +5,7 @@ namespace Clio.ProjectManagerModel.ViewModel.Content
 {
     public sealed class StaticContent : PresentationContent
     {
-        public StaticContent(IPresentationContent viewModel) : base( viewModel)
+        public StaticContent(IPMViewModel viewModel) : base( viewModel)
         {
             ContentType = ContentType.Static;
         }

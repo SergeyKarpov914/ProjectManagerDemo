@@ -2,7 +2,7 @@
 {
     public sealed class TaskContent : PresentationContent
     {
-        public TaskContent(IPresentationContent viewModel) : base(viewModel)
+        public TaskContent(IPMViewModel viewModel) : base(viewModel)
         {
             ContentType = ContentType.Task;
         }

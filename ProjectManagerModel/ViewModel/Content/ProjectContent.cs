@@ -6,7 +6,7 @@ namespace Clio.ProjectManagerModel.ViewModel.Content
 {
     public sealed class ProjectContent : PresentationContent
     {
-        public ProjectContent(IPresentationContent viewModel) : base(viewModel)
+        public ProjectContent(IPMViewModel viewModel) : base(viewModel)
         {
             ContentType = ContentType.Project;
         }
@@ -14,6 +14,10 @@ namespace Clio.ProjectManagerModel.ViewModel.Content
         public ObservableCollection<ProjectElement> ProjectElements => _viewModel.ProjectElements;
 
         public ICommand OpenExcelFileCommand => _viewModel.OpenExcelFileCommand;
-        public ICommand OpenCsvFileCommand => _viewModel.OpenCsvFileCommand;
+        public ICommand OpenCsvFileCommand   => _viewModel.OpenCsvFileCommand;
+        public ICommand AddProjectCommand    => _viewModel.AddProjectCommand;
+        public ICommand RowValidatingCommand => _viewModel.RowValidatingCommand;
+        public ICommand DeleteProjectCommand => _viewModel.DeleteProjectCommand;
+
     }
 }
