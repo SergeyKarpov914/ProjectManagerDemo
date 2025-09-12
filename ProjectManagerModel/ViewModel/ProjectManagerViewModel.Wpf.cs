@@ -7,50 +7,47 @@ using Clio.ProjectManagerModel.ViewModel.Element;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Clio.ProjectManagerModel.ViewModel
 {
-    public interface IPMViewModel
-    {
-        ObservableCollection<ProjectElement> ProjectElements { get; }
-        ObservableCollection<TaskElement> TaskElements { get; }
-
-        public IEnumerable<Client>   Clients { get; }
-        public IEnumerable<Employee> Employees { get; }
-
-        ICommand OpenExcelFileCommand { get; }
-        ICommand OpenCsvFileCommand   { get; }
-        ICommand AddProjectCommand    { get; }
-        ICommand RowValidatingCommand { get; }
-        ICommand DeleteProjectCommand { get; }
-
-    }
-
-    #region content types
+    #region content (datatemplate) types
 
     public enum ContentType { Project, Task, Static, None }
 
-    public class PresentationContent
-    {
+    public abstract class PresentationContent                      // vm composition is used instead of inheritance, 
+    {                                                              // because vm is injected as singleton and itself depends on constructor injection
         protected readonly IPMViewModel _viewModel;
 
-        public PresentationContent(IPMViewModel viewModel)
+        protected PresentationContent(IPMViewModel viewModel)
         {
             _viewModel = viewModel;
         }
         protected ContentType ContentType { get; set; } = ContentType.None;
     }
 
-    #endregion content types
+    #endregion content (datatemplate) types
 
     public partial class ProjectManagerViewModel : ObservableObject, IPMViewModel
     {
+        #region fields
+
+        private ProjectContent _projectContent = null;
+        private StaticContent _staticContent = null;
+
+        //      private TaskContent _taskContent = null;          // TEMP
+        private object _taskContent = null;
+
+        private IWinAccess _winAccess = null;
+
+        #endregion fields
+
         public ProjectManagerViewModel Initialize(IWinAccess winAccess, /*TEMP*/ object taskContent)
         {
             ContentSwitchCommand = MvvmMaster.CreateAsyncCommand<string>(ResolveContent);
-
+            
             OpenExcelFileCommand = MvvmMaster.CreateCommand<string>(OpenExcelFile);
             OpenCsvFileCommand   = MvvmMaster.CreateCommand<string>(OpenCsvFile);
             AddProjectCommand    = MvvmMaster.CreateCommand<string>(OnProjectAdd);
@@ -80,24 +77,23 @@ namespace Clio.ProjectManagerModel.ViewModel
         #region collections
 
         public ObservableCollection<ProjectElement> ProjectElements { get; private set; } = new ObservableCollection<ProjectElement>();
-        public ObservableCollection<TaskElement> TaskElements { get; private set; } = new ObservableCollection<TaskElement>();
+        public ObservableCollection<TaskElement>    TaskElements    { get; private set; } = new ObservableCollection<TaskElement>();
 
-        public IEnumerable<Client> Clients { get; private set; }
-        public IEnumerable<Employee> Employees { get; private set; }
-        public IEnumerable<ProjectType> ProjectTypes { get; private set; }
-
+        public IEnumerable<Client>      Clients      { get; private set; } = Enumerable.Empty<Client>();
+        public IEnumerable<Employee>    Employees    { get; private set; } = Enumerable.Empty<Employee>();
+        public IEnumerable<ProjectType> ProjectTypes { get; private set; } = Enumerable.Empty<ProjectType>();
 
         private async Task RefreshProjectCollection(IEnumerable<Project> projects, bool doClear = false)
         {
-            if (projects is not null)
+            if (doClear)
             {
-                if (doClear)
-                {
-                    ProjectElements.Clear();
-                }
+                ProjectElements.Clear();
+            }
+            if (!projects.IsEmpty())
+            {
                 foreach (Project project in projects)
                 {
-                    ProjectElements.Add(ProjectElement.Create(project));
+                    ProjectElements.Add(ProjectElement.Create(project, this));
                 }
             }
             await Task.Delay(0);
@@ -105,6 +101,7 @@ namespace Clio.ProjectManagerModel.ViewModel
 
         private async Task GetProjects()
         {
+            await GetStaticEntities();
             await RefreshProjectCollection(await _processor.GetProjects());
         }
 
@@ -120,6 +117,12 @@ namespace Clio.ProjectManagerModel.ViewModel
         #region commands
 
         public ICommand ContentSwitchCommand { get; private set; }
+        public ICommand OpenExcelFileCommand { get; private set; }
+        public ICommand OpenCsvFileCommand   { get; private set; }
+        public ICommand AddProjectCommand    { get; private set; }
+        public ICommand RowValidatingCommand { get; private set; }
+        public ICommand DeleteProjectCommand { get; private set; }
+
 
         private async Task ResolveContent(string name)
         {
@@ -143,8 +146,6 @@ namespace Clio.ProjectManagerModel.ViewModel
             }
         }
 
-        public ICommand OpenExcelFileCommand { get; private set; }
-
         private async void OpenExcelFile(string name)
         {
             if (null != (name = _winAccess.SelectFile()))
@@ -152,8 +153,6 @@ namespace Clio.ProjectManagerModel.ViewModel
                 await RefreshProjectCollection(await _excelMaster.ImportFromExcel<Project>(name));
             }
         }
-
-        public ICommand OpenCsvFileCommand { get; private set; }
 
         private void OpenCsvFile(string name)
         {
@@ -163,21 +162,15 @@ namespace Clio.ProjectManagerModel.ViewModel
             }
         }
 
-        public ICommand AddProjectCommand { get; private set; }
-
         private void OnProjectAdd(string name)
         {
             _winAccess.ShowNotification("Start adding new project");
         }
 
-        public ICommand RowValidatingCommand { get; private set; }
-
         private void OnProjectValidating(string name)
         {
             _winAccess.ShowNotification("New project is on it's way");
         }
-
-        public ICommand DeleteProjectCommand { get; private set; }
 
         private void OnProjectDelete(string name)
         {
@@ -185,17 +178,5 @@ namespace Clio.ProjectManagerModel.ViewModel
         }
 
         #endregion commands
-
-        #region fields
-
-        private ProjectContent _projectContent = null;
-        private StaticContent  _staticContent = null;
-       
-        //      private TaskContent _taskContent = null;          // TEMP
-        private object _taskContent = null;
-
-        private IWinAccess _winAccess = null;
-
-        #endregion fields
     }
 }

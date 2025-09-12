@@ -40,7 +40,7 @@ CREATE TABLE [dbo].[Employee](
 	[LocationCode] [nvarchar](50) NULL,
 	[Discipline] [nvarchar](128) NULL,
 	[JobGroupDescription] [nvarchar](128) NULL,
- CONSTRAINT [PK_ref_Resource] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -58,7 +58,7 @@ CREATE TABLE [dbo].[ProjectType](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](255) NOT NULL,
 	[Code] [nvarchar](255) NOT NULL,
- CONSTRAINT [PK__Proj__3214EC277FA22B97] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_ProjectType] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -75,7 +75,7 @@ CREATE TABLE [dbo].[Project](
 	[Code] [nvarchar](255) NOT NULL,
 	[ClientId] [int] NOT NULL,
 	[ProjectTypeId] [int] NOT NULL,
-	[EmployeeCode] [nvarchar](255) NULL,
+	[EmployeeId] [int] NULL,
 	[AccountingName] [nvarchar](max) NULL,
  CONSTRAINT [PK_Project] PRIMARY KEY CLUSTERED 
 (
@@ -86,11 +86,19 @@ GO
 CREATE UNIQUE INDEX AK_Project_Code   
    ON [dbo].[Project] (Code);   
 GO 
+
 ALTER TABLE [dbo].[Project]  WITH CHECK ADD  CONSTRAINT [FK_Project_Client] FOREIGN KEY([ClientId])
 REFERENCES [dbo].[Client] ([Id])
 GO
 ALTER TABLE [dbo].[Project] CHECK CONSTRAINT [FK_Project_Client]
 GO
+
+ALTER TABLE [dbo].[Project]  WITH CHECK ADD  CONSTRAINT [FK_Project_Employee] FOREIGN KEY([EmployeeId])
+REFERENCES [dbo].[Employee] ([Id])
+GO
+ALTER TABLE [dbo].[Project] CHECK CONSTRAINT [FK_Project_Employee]
+GO
+
 ALTER TABLE [dbo].[Project]  WITH CHECK ADD  CONSTRAINT [FK_Project_ProjectType] FOREIGN KEY([ProjectTypeId])
 REFERENCES [dbo].[ProjectType] ([Id])
 GO

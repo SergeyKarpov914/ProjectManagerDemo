@@ -55,7 +55,18 @@
 								<i:EventTrigger EventName="RecordDeleting">
 									<i:InvokeCommandAction Command="{Binding DeleteProjectCommand}" />
 								</i:EventTrigger>
-							</i:Interaction.Triggers>
+
+						</i:Interaction.Triggers>
+
+
+						<sync:SfDataGrid.RecordContextMenu>
+							<ContextMenu>
+								<MenuItem x:Name="AddTask" Header="Add Task" />
+								<MenuItem x:Name="Save"    Header="Save Changes" />
+								<MenuItem x:Name="Delete"  Command="{Binding Source={x:Static Member=vm:ProjectContent.Delete}}" Header="Delete Project" />
+							</ContextMenu>
+						</sync:SfDataGrid.RecordContextMenu>
+
 
 						<sync:SfDataGrid.Columns>
 							<sync:GridTextColumn HeaderText="Code"         MappingName="Code" Width="80"/>
@@ -63,7 +74,7 @@
 							<sync:GridTextColumn HeaderText="Client"       MappingName="Client" />
 							<sync:GridTextColumn HeaderText="Employee"     MappingName="Employee" />
 							<sync:GridTextColumn HeaderText="Account"      MappingName="AccountingName" />
-							<sync:GridTextColumn HeaderText="Project Type" MappingName="ProjectType" />
+							<sync:GridTextColumn HeaderText="Project Type" MappingName="ProjectType" Width="250"/>
 						</sync:SfDataGrid.Columns>
 					</sync:SfDataGrid>
 

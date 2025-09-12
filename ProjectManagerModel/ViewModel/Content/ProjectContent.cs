@@ -9,8 +9,8 @@ namespace Clio.ProjectManagerModel.ViewModel.Content
         public ProjectContent(IPMViewModel viewModel) : base(viewModel)
         {
             ContentType = ContentType.Project;
+            ViewModel = viewModel;
         }
-
         public ObservableCollection<ProjectElement> ProjectElements => _viewModel.ProjectElements;
 
         public ICommand OpenExcelFileCommand => _viewModel.OpenExcelFileCommand;
@@ -19,5 +19,7 @@ namespace Clio.ProjectManagerModel.ViewModel.Content
         public ICommand RowValidatingCommand => _viewModel.RowValidatingCommand;
         public ICommand DeleteProjectCommand => _viewModel.DeleteProjectCommand;
 
+        public static IPMViewModel ViewModel { get; set; }
+        public static ICommand Delete => ViewModel.DeleteProjectCommand;
     }
 }

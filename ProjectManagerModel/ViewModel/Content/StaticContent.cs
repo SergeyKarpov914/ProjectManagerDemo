@@ -9,8 +9,7 @@ namespace Clio.ProjectManagerModel.ViewModel.Content
         {
             ContentType = ContentType.Static;
         }
-
-        public IEnumerable<Client> Clients     => _viewModel.Clients;
+        public IEnumerable<Client>   Clients   => _viewModel.Clients;
         public IEnumerable<Employee> Employees => _viewModel.Employees ;
     }
 }
