@@ -160,7 +160,7 @@ namespace Clio.ProjectManagerModel
 
         #region entity crud
 
-        public async Task<IEnumerable<E>> ReedSet<E>(string clause = null) where E : class, IEntity
+        public async Task<IEnumerable<E>> ReadSet<E>(string clause = null) where E : class, IEntity
         {
             IEnumerable<E> set = Enumerable.Empty<E>();
             try

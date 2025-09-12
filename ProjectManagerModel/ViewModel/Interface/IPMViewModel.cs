@@ -17,8 +17,7 @@ namespace Clio.ProjectManagerModel.ViewModel
 
         ICommand OpenExcelFileCommand { get; }
         ICommand OpenCsvFileCommand   { get; }
-        ICommand AddProjectCommand    { get; }
-        ICommand RowValidatingCommand { get; }
-        ICommand DeleteProjectCommand { get; }
+        ICommand SaveCommand { get; }
+        ICommand DeleteCommand { get; }
     }
 }

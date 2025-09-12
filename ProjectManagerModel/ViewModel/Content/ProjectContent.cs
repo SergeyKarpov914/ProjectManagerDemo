@@ -15,11 +15,14 @@ namespace Clio.ProjectManagerModel.ViewModel.Content
 
         public ICommand OpenExcelFileCommand => _viewModel.OpenExcelFileCommand;
         public ICommand OpenCsvFileCommand   => _viewModel.OpenCsvFileCommand;
-        public ICommand AddProjectCommand    => _viewModel.AddProjectCommand;
-        public ICommand RowValidatingCommand => _viewModel.RowValidatingCommand;
-        public ICommand DeleteProjectCommand => _viewModel.DeleteProjectCommand;
+        
+        public ICommand SaveCommand    => _viewModel.SaveCommand;
+        public ICommand DeleteCommand  => _viewModel.DeleteCommand;
 
         public static IPMViewModel ViewModel { get; set; }
-        public static ICommand Delete => ViewModel.DeleteProjectCommand;
+        public static ICommand Save => ViewModel.SaveCommand;
+        public static ICommand Delete => ViewModel.DeleteCommand;
+    
+        public ProjectElement SelectedItem { get; set; }
     }
 }

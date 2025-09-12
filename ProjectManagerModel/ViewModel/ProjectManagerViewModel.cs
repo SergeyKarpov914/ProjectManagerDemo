@@ -1,7 +1,12 @@
-﻿using Acsp.Core.Lib.Extension;
+﻿using Acsp.Core.Lib.Abstraction;
+using Acsp.Core.Lib.Extension;
 using Acsp.Core.Lib.Gateway;
 using Acsp.Core.Lib.Master;
+using Clio.ProjectManager.DTO;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Clio.ProjectManagerModel.ViewModel
 {
@@ -38,5 +43,25 @@ namespace Clio.ProjectManagerModel.ViewModel
         public ProjectManagerProcessor Processor => _processor;
 
         #endregion c-tor            
+
+        #region read-only collections
+
+        public IEnumerable<Client> Clients { get; private set; } = Enumerable.Empty<Client>();
+        public IEnumerable<Employee> Employees { get; private set; } = Enumerable.Empty<Employee>();
+        public IEnumerable<ProjectType> ProjectTypes { get; private set; } = Enumerable.Empty<ProjectType>();
+
+        private async Task GetStaticEntities()
+        {
+            Clients = await _processor.GetClients();
+            Employees = await _processor.GetEmployees();
+            ProjectTypes = await _processor.GetProjectTypes();
+        }
+
+        #endregion read-only collections
+
+        public async Task Delete(IElement element)
+        {
+            await _processor.Delete(element.Entity);        
+        }
     }
 }

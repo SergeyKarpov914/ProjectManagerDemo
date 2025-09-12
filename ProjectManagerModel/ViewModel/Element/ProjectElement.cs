@@ -44,6 +44,8 @@ namespace Clio.ProjectManagerModel.ViewModel.Element
             return element;
         }
 
+        public int Id => Entity.Id;
+
         public string Name          { get { return Entity.Name; } set { Entity.Name = value; } }
         public string Code          { get { return Entity.Code; } set { Entity.Code = value; } }
 

@@ -51,5 +51,10 @@ namespace Clio.ProjectManager.WPF.WinUtil
                 timer.Start();
             }
         }
+
+        public bool Confirmation(string message, string caption)
+        { 
+            return MessageBoxResult.OK == MessageBox.Show(message, caption, MessageBoxButton.OKCancel, MessageBoxImage.Question);
+        }
     }
 }

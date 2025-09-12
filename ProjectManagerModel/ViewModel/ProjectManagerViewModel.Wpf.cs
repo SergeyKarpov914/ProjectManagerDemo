@@ -50,16 +50,18 @@ namespace Clio.ProjectManagerModel.ViewModel
             
             OpenExcelFileCommand = MvvmMaster.CreateCommand<string>(OpenExcelFile);
             OpenCsvFileCommand   = MvvmMaster.CreateCommand<string>(OpenCsvFile);
-            AddProjectCommand    = MvvmMaster.CreateCommand<string>(OnProjectAdd);
-            RowValidatingCommand = MvvmMaster.CreateCommand<string>(OnProjectValidating);
-            DeleteProjectCommand = MvvmMaster.CreateCommand<string>(OnProjectDelete);
+
+            SaveCommand = MvvmMaster.CreateAsyncCommand<object>(OnSave);
+            DeleteCommand = MvvmMaster.CreateAsyncCommand<object>(OnDelete);
 
             _projectContent = new ProjectContent(this);
             _staticContent = new StaticContent(this);
+            
+            //////////////////////////////////////////////////////////
             _taskContent = taskContent; // TEMP new TaskContent(this);
+            //////////////////////////////////////////////////////////
 
             _winAccess = winAccess;
-
             return this;
         }
 
@@ -74,14 +76,10 @@ namespace Clio.ProjectManagerModel.ViewModel
 
         #endregion props 
 
-        #region collections
+        #region observable collections
 
         public ObservableCollection<ProjectElement> ProjectElements { get; private set; } = new ObservableCollection<ProjectElement>();
         public ObservableCollection<TaskElement>    TaskElements    { get; private set; } = new ObservableCollection<TaskElement>();
-
-        public IEnumerable<Client>      Clients      { get; private set; } = Enumerable.Empty<Client>();
-        public IEnumerable<Employee>    Employees    { get; private set; } = Enumerable.Empty<Employee>();
-        public IEnumerable<ProjectType> ProjectTypes { get; private set; } = Enumerable.Empty<ProjectType>();
 
         private async Task RefreshProjectCollection(IEnumerable<Project> projects, bool doClear = false)
         {
@@ -105,23 +103,17 @@ namespace Clio.ProjectManagerModel.ViewModel
             await RefreshProjectCollection(await _processor.GetProjects());
         }
 
-        private async Task GetStaticEntities()
-        {
-            Clients      = await _processor.GetClients();
-            Employees    = await _processor.GetEmployees();
-            ProjectTypes = await _processor.GetProjectTypes();
-        }
-
-        #endregion collections
+        #endregion observable collections
 
         #region commands
 
         public ICommand ContentSwitchCommand { get; private set; }
+        
         public ICommand OpenExcelFileCommand { get; private set; }
         public ICommand OpenCsvFileCommand   { get; private set; }
-        public ICommand AddProjectCommand    { get; private set; }
-        public ICommand RowValidatingCommand { get; private set; }
-        public ICommand DeleteProjectCommand { get; private set; }
+
+        public ICommand SaveCommand          { get; private set; }
+        public ICommand DeleteCommand        { get; private set; }
 
 
         private async Task ResolveContent(string name)
@@ -162,19 +154,35 @@ namespace Clio.ProjectManagerModel.ViewModel
             }
         }
 
-        private void OnProjectAdd(string name)
+        private async Task OnSave(object element)
         {
-            _winAccess.ShowNotification("Start adding new project");
+            ProjectElement project = element as ProjectElement ?? _projectContent.SelectedItem;
+
+            if (project.Entity.Id <= 0)
+            {
+                await _processor.Create(project.Entity);
+                _winAccess.ShowNotification($"Created project '{project.Name}'");
+            }
+            else
+            {
+                await _processor.Update(project.Entity);
+                _winAccess.ShowNotification($"Updated project '{project.Name}'");
+            }
         }
 
-        private void OnProjectValidating(string name)
+        private async Task OnDelete(object element)
         {
-            _winAccess.ShowNotification("New project is on it's way");
-        }
+            ProjectElement project = element as ProjectElement ?? _projectContent.SelectedItem;
 
-        private void OnProjectDelete(string name)
-        {
-            _winAccess.ShowNotification("Delete order. Who do you think you are? Nigel Mansell?", Notification.Error, 5000);
+            if (project.Entity.Id <= 0)
+            {
+                _winAccess.ShowNotification("Cannot delete order, there is no database Id", Notification.Error, 5000);
+                return;
+            }
+            if (_winAccess.Confirmation($"Project '{project.Name}' is about to be deleted", "Project Delete"))
+            {
+                await _processor.Delete(project.Entity);            
+            }
         }
 
         #endregion commands

@@ -29,31 +29,25 @@
 					<sync:ButtonAdv Grid.Row="0" Grid.Column="0" Margin="0,5" Padding="20,5" Command="{Binding OpenExcelFileCommand}" Label="Import Projects from Excel"/>
 					<sync:ButtonAdv Grid.Row="0" Grid.Column="1" Margin="20,5" Padding="20,5" Command="{Binding OpenCsvFileCommand}" Label="Import Projects from CSV"/>
 
-					<sync:ButtonAdv Grid.Row="0" Grid.Column="2" Margin="20,5" Padding="20,5" Label="Event test">
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="OnClick">
-								<i:InvokeCommandAction Command="{Binding RecordDeletedCommand}" />
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-					</sync:ButtonAdv>
-					
-					 <sync:SfDataGrid 	   Grid.Row="1" Grid.ColumnSpan="4" Margin="0,20"
+					<sync:SfDataGrid 	   x:Name="projectGrid"
+										   Grid.Row="1" Grid.ColumnSpan="4" Margin="0,20"
 										   Height="400" VerticalAlignment="Top" AddNewRowPosition="Top"
 										   AllowEditing="True"
 										   AllowDeleting="True"
 										   SelectionUnit="Row"
 										   NewItemPlaceholderPosition="AtEnd"
 										   ItemsSource="{Binding ProjectElements}" 
+										   SelectedItem="{Binding SelectedItem}"
                                            AutoGenerateColumns="False"	>
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="AddNewRowInitiating">
 									<i:InvokeCommandAction Command="{Binding AddProjectCommand}" />
 								</i:EventTrigger>
 								<i:EventTrigger EventName="RowValidating">
-									<i:InvokeCommandAction Command="{Binding RowValidatingCommand}" />
-								</i:EventTrigger>
+									<i:InvokeCommandAction Command="{Binding DataContext.SaveCommand, ElementName=projectGrid}" CommandParameter="{Binding SelectedItem, ElementName=projectGrid}"/>
+							</i:EventTrigger>
 								<i:EventTrigger EventName="RecordDeleting">
-									<i:InvokeCommandAction Command="{Binding DeleteProjectCommand}" />
+									<i:InvokeCommandAction Command="{Binding DataContext.DeleteCommand, ElementName=projectGrid}" CommandParameter="{Binding SelectedItem, ElementName=projectGrid}"/>
 								</i:EventTrigger>
 
 						</i:Interaction.Triggers>
@@ -61,14 +55,15 @@
 
 						<sync:SfDataGrid.RecordContextMenu>
 							<ContextMenu>
-								<MenuItem x:Name="AddTask" Header="Add Task" />
-								<MenuItem x:Name="Save"    Header="Save Changes" />
-								<MenuItem x:Name="Delete"  Command="{Binding Source={x:Static Member=vm:ProjectContent.Delete}}" Header="Delete Project" />
+								<MenuItem x:Name="AddTask" Header="Add Task to Project" />
+								<MenuItem x:Name="Save"    Header="Save Project"   Command="{Binding Source={x:Static Member=vm:ProjectContent.Save}}"   CommandParameter="{Binding SelectedItem, ElementName=projectGrid}" />
+								<MenuItem x:Name="Delete"  Header="Delete Project" Command="{Binding Source={x:Static Member=vm:ProjectContent.Delete}}" CommandParameter="{Binding SelectedItem, ElementName=projectGrid}" />
 							</ContextMenu>
 						</sync:SfDataGrid.RecordContextMenu>
 
 
 						<sync:SfDataGrid.Columns>
+							<sync:GridTextColumn HeaderText="Database Id"  MappingName="Id" Width="80"/>
 							<sync:GridTextColumn HeaderText="Code"         MappingName="Code" Width="80"/>
 							<sync:GridTextColumn HeaderText="Name"         MappingName="Name"  Width="300"/>
 							<sync:GridTextColumn HeaderText="Client"       MappingName="Client" />
